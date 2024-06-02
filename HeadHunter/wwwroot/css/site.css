@@ -1,0 +1,205 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+.button-sub,
+.btn-tog {
+  height: 50px;
+}
+
+.button-sub {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.navbar-nav a {
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.main-title {
+  font-size: 56px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.main-text {
+  font-size: 20px;
+  color: #fff;
+  font-weight: 400;
+}
+
+.main-btn {
+  font-size: 20px;
+  font-weight: 700;
+  color: #232536;
+  background: #FFD050;
+}
+
+.main-container {
+  background-image: url(../images/main-pic.jpg);
+  background-position: top center;
+  background-size: cover;
+  height: 550px;
+
+}
+
+.post-main-title {
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.post-block {
+  background-color: #F5F3F3;
+}
+
+.post-title {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.post-text {
+  font-size: 16px;
+  font-weight: 400;
+  color: #6D6E76;
+}
+
+.post-botton {
+  font-size: 20px;
+  font-weight: 700;
+  background-color: #FFD050;
+}
+
+.categ-title {
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.card-bg {
+  background-repeat: no-repeat;
+  background-position: center top;
+}
+
+.card-bg-1 {
+  background-image: url(../images/ic-business.png);
+}
+
+.card-bg-2 {
+  background-image: url(../images/ic-startup.png);
+}
+
+.card-bg-3 {
+  background-image: url(../images/ic-economy.png);
+}
+
+.card-bg-4 {
+  background-image: url(../images/ic-technology.png);
+}
+
+.card-title {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.card-bg p {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.categ-container a {
+  text-decoration: none;
+}
+
+.sec-cont {
+  background-color: rgba(255, 208, 80, 0.5);
+}
+
+.sec-title {
+  font-size: 44px;
+  font-weight: 700;
+}
+
+.sec-text {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.sec-button {
+  font-size: 20px;
+  font-weight: 700;
+  background-color: #FFD050;
+}
+
+.list-title {
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.list-names {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.list-text {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.list-button {
+  font-size: 20px;
+  font-weight: 700;
+  background-color: #FFD050;
+}
+
+.footer-text {
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.footer-text a {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.icons a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 16px;
+  margin-left: 12px;
+}
+
+.form-control:focus {
+  border-color: #FFD050;
+  outline: 0;
+  box-shadow: inset 0 1px 1px rgba(252, 210, 0, 0.075), 0 0 8px rgba(255, 204, 0, 0.6);
+}
+
