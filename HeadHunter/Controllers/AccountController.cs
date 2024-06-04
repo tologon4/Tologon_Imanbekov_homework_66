@@ -22,6 +22,12 @@ public class AccountController : Controller
         _signInManager = signInManager;
     }
 
+    public async Task<IActionResult> Profile()
+    {
+        User user = await _userManager.GetUserAsync(User);
+        return RedirectToAction("Profile", $"{(user.Role == "Соискатель" ? "Applicant" : "Employer")}");
+    }
+    
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {

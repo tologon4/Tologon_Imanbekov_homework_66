@@ -27,32 +27,18 @@ public class ValidationController : Controller
 
     }
     
-    [AcceptVerbs("GET", "POST")]
-    public bool EditCheckEmail(string Email)
+    [HttpGet]
+    public async Task<IActionResult> EditCheckUsernameEmail(string value)
     {
-        User usr = _db.Users.FirstOrDefault(u => u.Id == int.Parse(_userManager.GetUserId(User)));
+        User usr = await _userManager.GetUserAsync(User);
         bool result = true;
-        if (_db.Users.Any(u => u.Email.ToLower().Trim() == Email.ToLower().Trim()))
+        if (_db.Users.Any(u => u.UserName.ToLower().Trim() == value.ToLower().Trim()) || _db.Users.Any(u => u.Email.ToLower().Trim() == value.ToLower().Trim()))
         {
-            if (Email.ToLower().Trim() == usr.Email.ToLower().Trim())
+            if (value.ToLower().Trim() == usr.UserName.ToLower().Trim() || value.ToLower().Trim() == usr.Email.ToLower().Trim())
                 result = true;
             else
                 result = false;
         }
-        return result;
-    }
-    [AcceptVerbs("GET", "POST")]
-    public bool EditCheckUsername(string UserName)
-    {
-        User usr = _db.Users.FirstOrDefault(u => u.Id == int.Parse(_userManager.GetUserId(User)));
-        bool result = true;
-        if (_db.Users.Any(u => u.UserName.ToLower().Trim() == UserName.ToLower().Trim()))
-        {
-            if (UserName.ToLower().Trim() == usr.UserName.ToLower().Trim())
-                result = true;
-            else
-                result = false;
-        }
-        return result;
+        return Ok(result);
     }
 }

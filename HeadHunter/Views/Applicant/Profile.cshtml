@@ -1,0 +1,182 @@
+@model User
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+
+<div class="col-md-4 pb-5 text-center mt-5">
+  <img src="@Model.Avatar" width="200" height="200" class="rounded-circle mx-auto ">
+</div>
+<div class="row row-cols-2">
+  <div class="col-6 px-5">
+    <table class="table table-light table-bordered mx-auto">
+      <tbody>
+      <tr>
+        <td>Имя пользователя</td>
+        <td id="rusername">@Model.UserName</td>
+        <td><span class="edit-button text-primary" role="button" data-field="username" data-field2="Имя пользователя">Изменить</span></td>
+      </tr>
+      <tr>
+        <td >Email</td>
+        <td id="remail">@Model.Email</td>
+        <td><span class="edit-button text-primary" role="button" data-field="email" data-field2="Email">Изменить</span></td>
+      </tr>
+      <tr>
+        <td >Пароль</td>
+        <td id="rpassword">***</td>
+        <td><span class="edit-button text-primary" role="button" data-field="password" data-field2="Пароль">Изменить</span></td>
+      </tr>
+      <tr>
+        <td >Номер телефона</td>
+        <td id="rphone">@Model.PhoneNumber</td>
+        <td><span class="edit-button text-primary" role="button" data-field="phone" data-filed2="Номер телефона">Изменить</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-4" id="change-div">
+    
+  </div>
+</div>
+
+@section Scripts
+{
+  <script>
+    function checkUserNameEmail() {
+      let value = $('#editInput').val();
+      $.ajax({
+        type: 'GET',
+        url: '@Url.Action("EditCheckUsernameEmail", "Validation")',
+        contentType: 'application/json;charset=utf-8',
+        dataType: 'json',
+        data: { 'value': value },
+        success: function (result) {
+          if (!result) {
+            $('#errorTaken').text(value + ' уже занят!');
+          } else {
+            $('#errorTaken').text('');
+          }
+        }
+      });
+    }
+  
+    function onChange() {
+      const password = document.querySelector('input[name=password]');
+      const confirm = document.querySelector('input[name=confirm]');
+      if (confirm.value === password.value) {
+        confirm.setCustomValidity('');
+      } else {
+        confirm.setCustomValidity('Passwords do not match');
+      }
+    }
+  
+    $(document).ready(function () {
+      $('.edit-button').click(function () {
+        let field = $(this).data('field');
+        let field2 = $(this).data('field2');
+        let currentValue;
+        let formId = 'form-' + field;
+  
+        if ($('#' + formId).length) {
+          $('#' + formId).remove();
+          return;
+        }
+  
+        switch (field) {
+          case 'username':
+            currentValue = $('#rusername').text();
+            break;
+          case 'email':
+            currentValue = $('#remail').text();
+            break;
+          case 'phone':
+            currentValue = $('#rphone').text();
+            break;
+          default:
+            currentValue = '';
+        }
+  
+        let passInputs = 
+          `<div class="input-group mt-2">
+            <input type="password" onChange="onChange()" class="form-control" name="password" placeholder="Password" id="editInput" aria-describedby="button-addon1">
+            <button type="button" id="button-addon1" class="btn password-toggle-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="input-group mt-2">
+            <input type="password" onChange="onChange()" class="form-control" name="confirm" placeholder="Confirm Password" id="editInputConfPass" aria-describedby="button-addon2">
+            <button type="button" id="button-addon2" class="btn password-toggle-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                <path d="M12 16.01C14.2091 16.01 16 14.2191 16 12.01C16 9.80087 14.2091 8.01001 12 8.01001C9.79086 8.01001 8 9.80087 8 12.01C8 14.2191 9.79086 16.01 12 16.01Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 11.98C8.09 1.31996 15.91 1.32996 22 11.98" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 12.01C15.91 22.67 8.09 22.66 2 12.01" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>`;
+  
+        let formHtml = 
+          `<form id="${formId}" xmlns="http://www.w3.org/1999/html">
+            <div class="form-group" id="editForm">
+              <label for="editInput">Новый ${field2}:</label>
+              ${field === 'password' ? passInputs : 
+                `</br><label for="editInput" id="errorTaken" class="text-danger"></label>
+                <input onkeyup="checkUserNameEmail()" type="${field === 'email' ? 'email' : 'text'}" class="form-control" id="editInput" value="${currentValue}">`}
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Сохранить</button>
+            <button type="button" class="btn btn-light mt-4 ms-3" id="cancel-button">Отмена</button>
+          </form>`;
+  
+        $('#change-div').html(formHtml);
+  
+        $('#' + formId).submit(function (e) {
+          e.preventDefault();
+          let newValue = $('#editInput').val();
+          $.ajax({
+            url: '@Url.Action("Edit", "Applicant")',
+            type: 'POST',
+            data: { 'key': field, 'value': newValue },
+            success: function (data) {
+              if (data) {
+                $('#r' + field).text(newValue);
+              } else {
+                $('#editForm').append('<span class="mx-auto text-danger" id="errorEdit">Невозможно изменить ' + field2 + '</span>');
+                setTimeout(function () {
+                  $('#errorEdit').remove();
+                }, 5000);
+              }
+            }
+          });
+  
+          alert('Новое значение: ' + newValue);
+          $('#change-div').empty();
+        });
+  
+        $('#cancel-button').click(function (e) {
+          e.preventDefault();
+          $('#change-div').empty();
+        });
+  
+        $('#button-addon1').click(function (e) {
+          e.preventDefault();
+          let inputPass = $('#editInput');
+          inputPass.attr('type', inputPass.attr('type') === 'password' ? 'text' : 'password');
+        });
+  
+        $('#button-addon2').click(function (e) {
+          e.preventDefault();
+          let inputConfPass = $('#editInputConfPass');
+          inputConfPass.attr('type', inputConfPass.attr('type') === 'password' ? 'text' : 'password');
+        });
+      });
+    });
+  </script>
+
+
+}
+
