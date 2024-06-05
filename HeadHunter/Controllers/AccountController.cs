@@ -74,7 +74,7 @@ public class AccountController : Controller
         ViewBag.Roles = new string[] { "Соискатель", "Работадатель" };
         if (ModelState.IsValid)
         {
-            string path = "/images/defProf.png";
+            string path = "/images/defProf-ProfileN=1.png";
             if (uploadedFile != null)
             {
                 string newFileName = Path.ChangeExtension($"{model.UserName.Trim()}-ProfileN=1", Path.GetExtension(uploadedFile.FileName));
