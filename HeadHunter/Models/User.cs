@@ -6,4 +6,5 @@ public class User : IdentityUser<int>
 {
     public string Role { get; set; }
     public string Avatar { get; set; }
+    public ICollection<Resume>? Resumes { get; set; }
 }

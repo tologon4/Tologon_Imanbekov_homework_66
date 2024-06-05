@@ -1,0 +1,97 @@
+@model Resume
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+<div class="row mt-4">
+    <div class="col col-6 mx-auto">
+        <form asp-action="Create" asp-controller="Resume" asp-anti-forgery="true" enctype="multipart/form-data" id="main-form">
+            <div class="validation text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="input-group mt-3">
+                <label for="userLastName">Фамилия</label> 
+                &nbsp;<label for="userLastName"><span class="text-danger" asp-validation-for="UserLastName"></span></label>
+                <div class="input-group">
+                    <input asp-for="UserLastName" type="text" class="form-control" placeholder="Last name" id="userLastName" required="required">
+                </div>
+            </div>
+            <div class="input-group mt-3">
+                <label for="userFirstName">Имя</label> 
+                &nbsp;<label for="userFirstName"><span class="text-danger" asp-validation-for="UserFirstName"></span></label>
+                <div class="input-group">
+                    <input asp-for="UserFirstName" type="text" class="form-control" placeholder="Username" id="userFirstName" required="required">
+                </div>
+            </div>
+            <div class="input-group mt-3">
+                <label for="title">Тема(Название, должность)</label> 
+                &nbsp;<label for="title"><span class="text-danger" asp-validation-for="Title"></span></label>
+                <div class="input-group">
+                    <input asp-for="Title" type="text" class="form-control" placeholder="Title" id="title" required="required">
+                </div>
+            </div>
+            <div class="input-group mt-3">
+                <label for="category">Категория</label> 
+                &nbsp;<label for="category"><span class="text-danger" asp-validation-for="Category"></span></label>
+                <div class="input-group">
+                    <input asp-for="Category" type="text" class="form-control" placeholder="Category" id="category" required="required">
+                </div>
+            </div>
+            <div class="input-group mt-3">
+                <label for="salary">Желаемая заработная плата</label> 
+                &nbsp;<label for="salary"><span class="text-danger" asp-validation-for="ExpectedSalary"></span></label>
+                <div class="input-group">
+                    <input asp-for="ExpectedSalary" type="number" class="form-control" placeholder="Expected Salary" id="salary" required="required">
+                </div>
+            </div>
+            <div class="input-group mt-3">
+                <label for="telegram">Telegram</label>
+                &nbsp;<label for="telegram"><span class="text-danger" asp-validation-for="Telegram"></span></label>
+                <div class="input-group">
+                    <input asp-for="Telegram" type="text" class="form-control" placeholder="Telegram" id="telegram" required="required">
+                </div>
+            </div>
+            <div class="input-group mt-3">
+                <label for="email">Email</label> 
+                &nbsp;<label for="email"><span class="text-danger" asp-validation-for="Email"></span></label>
+                <div class="input-group">
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Email" id="email" required="required">
+                </div>
+            </div>
+            <div class="input-group mt-3">
+                <label for="phone">Номер Телефона</label> 
+                &nbsp;<label for="phone"><span class="text-danger" asp-validation-for="PhoneNumber"></span></label>
+                <div class="input-group">
+                    <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="Phone number" id="phone" required="required">
+                </div>
+            </div>
+            <div class="input-group mt-3">
+                <label for="facebook">Facebook</label> 
+                &nbsp;<label for="facebook"><span class="text-danger" asp-validation-for="Facebook"></span></label>
+                <div class="input-group">
+                    <input asp-for="Facebook" type="text" class="form-control" placeholder="Facebook" id="facebook">
+                </div>
+            </div>
+            <div class="input-group mt-3">
+                <label for="linkedIn">LinkedIn</label> 
+                &nbsp;<label for="linkedIn"><span class="text-danger" asp-validation-for="LinkedIn"></span></label>
+                <div class="input-group">
+                    <input asp-for="LinkedIn" type="text" class="form-control" placeholder="LinkedIn" id="linkedIn">
+                </div>
+            </div>
+            <div id="module-change-div" class="mt-4">
+                            
+            </div>
+            <div class="row row-cols-2 mt-3">
+                <div class="col col-6">
+                    <button type="button" class="btn btn-success add-module-button rounded-3 w-100" data-field="jobEx">Добавить опыт работы</button>
+                </div>
+                <div class="col col-6">
+                    <button type="button" class="btn btn-success add-module-button rounded-3 w-100" data-field="eduEx">Добавить курсы или образование</button>
+                </div>
+            </div>
+            <input id="modulesObjs" name="modulesObjs" type="hidden"/>
+            <button type="submit" class="btn btn-primary rounded-3 w-100 mt-5">Создать резюме</button>
+        </form>
+    </div>
+</div>
+

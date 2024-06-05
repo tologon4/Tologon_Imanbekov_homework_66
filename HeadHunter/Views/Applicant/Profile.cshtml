@@ -5,13 +5,20 @@
     Layout = "_Layout";
 }
 
-
-<div class="col-md-4 pb-5 text-center mt-5">
-  <img src="@Model.Avatar" width="200" height="200" class="rounded-circle mx-auto" id="ravatar">
-  <span for="avatar-file" class="edit-button" role="button" data-field="avatar" data-field2="Фото профиля"><i class="bi bi-pencil fs-3"></i></span>
-</div>
 <div class="row row-cols-2">
-  <div class="col-6 px-5">
+  <div class="col-md-4 pb-5 text-center mt-5">
+    <img src="@Model.Avatar" width="200" height="200" class="rounded-circle mx-auto" id="ravatar">
+    <span for="avatar-file" class="edit-button" role="button" data-field="avatar" data-field2="Фото профиля"><i class="bi bi-pencil fs-3"></i></span>
+  </div>
+  <div class="col-md-6 pb-5">
+    <div class="mt-5">
+      <a asp-action="Create" asp-controller="Resume" type="button" class="btn btn-outline-success rounded-3">Создать резюме</a>
+    </div>
+  </div>
+</div>
+
+<div class="row row-cols-2">
+  <div class="col-7 px-5">
     <table class="table table-light table-bordered mx-auto">
       <tbody>
       <tr>

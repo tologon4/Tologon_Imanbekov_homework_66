@@ -1,6 +1,8 @@
 using HeadHunter.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HeadHunter.Controllers;
 
@@ -17,12 +19,15 @@ public class ApplicantController : Controller
         _environment = environment;
     }
 
+    [Authorize]
+    [HttpGet]
     public async Task<IActionResult> Profile()
     {
-        User user = await _userManager.GetUserAsync(User);
+        User user = await _db.Users.Include(r => r.Resumes).FirstOrDefaultAsync(u => u.Id == int.Parse(_userManager.GetUserId(User)));
         return View(user);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Edit(string key, string? value, IFormFile? uploadedFile)
     {

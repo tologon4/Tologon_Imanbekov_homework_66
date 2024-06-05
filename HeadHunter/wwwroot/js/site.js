@@ -29,8 +29,119 @@ function onChange() {
     }
 }
 
+$().ready(function (){
+    
+    let moduleCounter = 0;
+    let moduleObjs = [];
 
-$(document).ready(function () {
+    function addModule(module = {}) {
+        moduleCounter++;
+        const moduleType = module.type || '';
+        const startDate = module.startDate || '';
+        const endDate = module.endDate || '';
+        const organization = module.organization || '';
+        const role = module.role || '';
+        const responsibilities = module.responsibilities || '';
+        const formId = `module-form-${moduleCounter}`;
+        let orgName, roleName, responseName;
+
+        switch (moduleType) {
+            case 'jobEx':
+                orgName = 'Название Компании';
+                roleName = 'Должность';
+                responseName = 'Обязанности';
+                break;
+            case 'eduEx':
+                orgName = 'Название Курса, Университета';
+                roleName = 'Ваша роль';
+                responseName = 'Чему вы научились';
+                break;
+        }
+
+        const resumeFormHtml = `
+                    <div class="module mt-4" id="${formId}">
+                        <input type="hidden" name="Modules[${moduleCounter}].Type" value="${moduleType}">
+                        <div class="row row-cols-2">
+                            <div class="col col-6">
+                                <label for="Modules_${moduleCounter}__StartDate">Дата начала</label> 
+                                <div class="input-group">
+                                    <input type="date" class="form-control" name="Modules[${moduleCounter}].StartDate" placeholder="Дата начала" id="Modules_${moduleCounter}__StartDate" value="${startDate}" required>
+                                </div>
+                            </div>
+                            <div class="col col-6">
+                                <label for="Modules_${moduleCounter}__EndDate">Дата окончания</label> 
+                                <div class="input-group">
+                                    <input type="date" class="form-control" name="Modules[${moduleCounter}].EndDate" placeholder="Дата окончания" id="Modules_${moduleCounter}__EndDate" value="${endDate}" required>
+                                </div>
+                            </div>
+                            <div class="col col-6 mt-3">
+                                <label for="Modules_${moduleCounter}__Organization">${orgName}</label> 
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="Modules[${moduleCounter}].Organization" placeholder="${orgName}" id="Modules_${moduleCounter}__Organization" value="${organization}" required>
+                                </div>
+                            </div>
+                            <div class="col col-6 mt-3">
+                                <label for="Modules_${moduleCounter}__Role">${roleName}</label> 
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="Modules[${moduleCounter}].Role" placeholder="${roleName}" id="Modules_${moduleCounter}__Role" value="${role}" required>
+                                </div>
+                            </div>
+                            <div class="col col-12 mt-3">
+                                <label for="Modules_${moduleCounter}__Response">${responseName}</label>
+                                <div class="input-group">
+                                    <textarea class="form-control h-100" name="Modules[${moduleCounter}].Response" id="Modules_${moduleCounter}__Response" placeholder="${responseName}" rows="4" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" value="${moduleType}" id="Modules_${moduleCounter}__Identity"/>
+                        <button type="button" class="btn btn-light mt-4 ms-3 module-cancel-button">Отмена</button>
+                    </div>`;
+
+        $('#module-change-div').append(resumeFormHtml);
+
+        $(`#${formId} .module-cancel-button`).click(function() {
+            $(`#${formId}`).remove();
+        });
+
+        const moduleObj = {
+            'StartedWorking': startDate,
+            'EndedWorking': endDate,
+            'OrganizationName': organization,
+            'Role': role,
+            'Responsibilities': responsibilities,
+            'Identity': moduleType
+        };
+
+        moduleObjs.push(moduleObj);
+    }
+
+    $('.add-module-button').click(function(e) {
+        e.preventDefault();
+        const resumeField = $(this).data('field');
+        addModule({ type: resumeField });
+    });
+
+    $('#main-form').submit(function() {
+        const moduleForms = $('.module');
+        moduleObjs = [];
+
+        moduleForms.each(function() {
+            const form = $(this);
+            const moduleObj = {
+                'Identity': form.find('input[name*="Type"]').val(),
+                'StartDate': form.find('input[name*="StartDate"]').val(),
+                'EndDate': form.find('input[name*="EndDate"]').val(),
+                'Organization': form.find('input[name*="Organization"]').val(),
+                'Role': form.find('input[name*="Role"]').val(),
+                'Response': form.find('textarea[name*="Response"]').val(),
+            };
+
+            moduleObjs.push(moduleObj);
+        });
+
+        $('#modulesObjs').val(JSON.stringify(moduleObjs));
+    });
+    
     $('.edit-button').click(function () {
         let field = $(this).data('field');
         let field2 = $(this).data('field2');
@@ -54,6 +165,7 @@ $(document).ready(function () {
                 break;
             case 'avatar':
                 currentValue = $('#profile-avatar').val();
+                break;
             default:
                 currentValue = '';
         }
