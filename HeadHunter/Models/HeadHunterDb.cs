@@ -9,6 +9,7 @@ public class HeadHunterDb : IdentityDbContext<User, IdentityRole<int>, int>
     public DbSet<User> Users { get; set; }
     public DbSet<Resume> Resumes { get; set; }
     public DbSet<Module> Modules { get; set; }
+    public DbSet<Vacancy> Vacancies { get; set; }
     
     public HeadHunterDb(DbContextOptions<HeadHunterDb> options) : base(options) { }
 

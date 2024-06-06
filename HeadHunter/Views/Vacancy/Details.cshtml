@@ -1,0 +1,56 @@
+@model Vacancy
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="row row-cols-2 my-5">
+  <div class="col-7 px-5 mt-5">
+    <table class="table table-light table-bordered mx-auto">
+      <tbody>
+      <tr>
+        <td>Название</td>
+        <td id="rname">@Model.Name</td>
+        <td><span class="vacancy-edit-button text-primary" role="button" data-field="name" data-field2="Название">Изменить</span></td>
+      </tr>
+      <tr>
+        <td >Заработная плата</td>
+        <td id="rsalary">@Model.Salary</td>
+        <td><span class="vacancy-edit-button text-primary" role="button" data-field="salary" data-field2="Заработная плата">Изменить</span></td>
+      </tr>
+      <tr>
+        <td>Обязанности</td>
+        <td id="rdemands">@Model.Demands</td>
+        <td><span class="vacancy-edit-button text-primary" role="button" data-field="demands" data-field2="Обязанности">Изменить</span></td>
+      </tr>
+      <tr>
+        <td >Опыт работы от</td>
+        <td id="rexFrom">@Model.ExperienceFrom</td>
+        <td><span class="vacancy-edit-button text-primary" role="button" data-field="exFrom" data-filed2="Опыт работы от">Изменить</span></td>
+      </tr>
+      <tr>
+        <td >Опыт работы до</td>
+        <td id="rexTo">@Model.ExperienceTo</td>
+        <td><span class="vacancy-edit-button text-primary" role="button" data-field="exTo" data-filed2="Опыт работы до">Изменить</span></td>
+      </tr>
+      <tr>
+        <td >Категория</td>
+        <td id="rcategory">@Model.Category</td>
+        <td><span class="vacancy-edit-button text-primary" role="button" data-field="category" data-filed2="Категория">Изменить</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-4 mt-5" id="vacancy-change-div">
+  </div>
+</div>
+
+@section Scripts
+{
+  <script>
+        let editVacancy = '@Url.Action("Edit", "Vacancy")';
+        let vacancyId = '@Model.Id';
+        let categories = @Html.Raw(Json.Serialize(ViewBag.Categories));
+  </script>
+}

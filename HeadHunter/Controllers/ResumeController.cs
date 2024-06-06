@@ -169,6 +169,21 @@ public class ResumeController : Controller
         await _db.SaveChangesAsync();
         return Ok(resume.EditedTime.ToString());
     }
+    
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Public(int id)
+    {
+        Resume? resume = await _db.Resumes.FirstOrDefaultAsync(r => r.Id == id);
+        if (resume != null)
+        {
+            resume.Published = !resume.Published;
+            _db.Resumes.Update(resume);
+            await _db.SaveChangesAsync();
+            return Ok(resume.Published);
+        }
+        return NotFound();
+    }
 
     [Authorize]
     [HttpPost]

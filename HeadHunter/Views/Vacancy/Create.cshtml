@@ -1,0 +1,65 @@
+@model Vacancy
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="row mt-4">
+    <div class="col col-6 mx-auto">
+        <form asp-action="Create" asp-controller="Vacancy" asp-anti-forgery="true" enctype="multipart/form-data" id="main-form">
+            <div class="validation text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="input-group mt-3">
+                <label for="name">Название</label> 
+                &nbsp;<label for="name"><span class="text-danger" asp-validation-for="Name"></span></label>
+                <div class="input-group">
+                    <input asp-for="Name" type="text" class="form-control" placeholder="Название" id="name" required="required">
+                </div>
+            </div>
+            <div class="input-group mt-3">
+                <label for="salary">Заработная плата</label> 
+                &nbsp;<label for="salary"><span class="text-danger" asp-validation-for="Salary"></span></label>
+                <div class="input-group">
+                    <input asp-for="Salary" type="number" class="form-control" placeholder="Заработная плата" id="salary" required="required">
+                </div>
+            </div>
+            <div class="input-group mt-2">
+                <label for="demands"><span class="text-danger" asp-validation-for="Demands"></span></label>
+                <div class="input-group">
+                    <textarea class="form-control h-100" asp-for="Demands" placeholder="Детали" type="text" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="row row-cols-2">
+                <div class="col col-6 input-group  mt-3">
+                                <label for="expFrom">Опыт работы от:</label> 
+                                &nbsp;<label for="expFrom"><span class="text-danger" asp-validation-for="ExperienceFrom"></span></label>
+                                <div class="input-group">
+                                    <input asp-for="ExperienceFrom" type="number" class="form-control" placeholder="Опыт работы от" id="expFrom" required="required">
+                                </div>
+                            </div>
+                <div class="col col-6 input-group  mt-3">
+                    <label for="expTo">Введите значение больше опыта работы от! Опыт работы до:</label> 
+                    &nbsp;<label for="expTo"><span class="text-danger" asp-validation-for="ExperienceTo"></span></label>
+                    <div class="input-group">
+                        <input asp-for="ExperienceFrom" type="number" class="form-control" placeholder="Опыт работы от" id="expTo" required="required">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-group mt-2">
+                <label for="category"><span class="text-danger" asp-validation-for="Category"></span></label>
+                <div class="input-group">
+                    <select asp-for="Category" class="form-select" id="category">
+                        <option disabled="disabled" selected="selected">Выберите Категорию</option>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <option value="@category">@category</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary rounded-3 w-100 mt-5">Создать вакансию</button>
+        </form>
+    </div>
+</div>
