@@ -9,6 +9,7 @@ public class Resume
     public string Title { get; set; }
     public DateTime? EditedTime { get; set; }
     public DateTime? CreatedTime { get; set; }
+    public string? UserAvatar { get; set; }
     public bool? Published { get; set; }
     [Required(ErrorMessage = "Заполните поле Category!")]
     public string Category { get; set; }

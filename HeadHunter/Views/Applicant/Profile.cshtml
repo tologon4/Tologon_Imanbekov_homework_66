@@ -47,15 +47,52 @@
   <div class="col-4" id="change-div">
   </div>
 </div>
+<div class="col-11 mx-auto mt-5">
+  <div class="text-center">
+    <h2 class="">Мои резюме</h2>
+  </div>
+  <div class="row row-cols-1 row-sm-cols-2 d-flex mt-4 g-4">
+    @foreach (var resume in Model.Resumes)
+    {
+      <div class="col col-12 col-sm-6 border border-primary rounded-3 resume">
+        <div class="job-item py-4">
+          <div class="row g-4">
+            <div class="col-sm-12 col-md-8 d-flex align-items-center">
+              <div class="text-start ps-4">
+                <h5 class="mb-3">@resume.Title</h5>
+                <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>Expected Salary: @resume.ExpectedSalary</span>
+                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i> <span id="editTime-@resume.Id"> @if(resume.EditedTime != null){ <span>Updated Time:</span>} @resume.EditedTime</span></span>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+              <div class="d-flex mb-3">
+                <a class="btn btn-primary rounded-3" asp-action="Details" asp-controller="Resume" asp-route-id="@resume.Id">Редактировать</a>
+                <button class="btn btn-primary rounded-3 mx-3 updateResume " data-field="@resume.Id" >Обновить</button>
+                <button class="btn btn-danger rounded-3 deleteResume " data-field="@resume.Id">Удалить</button>
+              </div>
+              <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Created Time: @resume.CreatedTime</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+</div>
+
 
 @section Scripts
 {
   <script>
     let editCheckUsernameEmail = '@Url.Action("EditCheckUsernameEmail", "Validation")';
     let edit = '@Url.Action("Edit", "Applicant")';
+    let  updateUrl = '@Url.Action("Update", "Resume")';
+    let deleteUrl = '@Url.Action("Delete", "Resume")';
     let role = 'applicant';
+    
+   
+              
   </script>
-
 
 }
 

@@ -29,7 +29,44 @@ function onChange() {
     }
 }
 
+
+
 $().ready(function (){
+
+    $('.updateResume').click(function (e){
+        e.preventDefault();
+        let resumeId = $(this).data('field');
+        console.log(resumeId);
+        $.ajax({
+            url: updateUrl,
+            type: 'POST',
+            data: { 'id':  resumeId},
+            success: function (data){
+                $('#editTime-'+resumeId).text('Updated Time: '+data);
+            }
+        });
+    });
+    $('.deleteResume').click(function (e){
+        e.preventDefault();
+        let resumeId = $(this).data('field');
+        console.log(resumeId);
+        $.ajax({
+            url: deleteUrl,
+            type: 'POST',
+            data: { 'id':  resumeId},
+            success: function (data){
+                if (data){
+                    $('.deleteResume[data-field="' + resumeId + '"]').closest('.resume').remove();
+                }
+                else {
+                    $('.deleteResume[data-field="' + resumeId + '"]').append(`<span class="mx-auto text-danger" id="errorDelete">Не удалось удалить!</span>`);
+                    setTimeout(function (){
+                        $('#errorDelete').remove();
+                    }, 5000)
+                }
+            }
+        });
+    });
     
     let moduleCounter = 0;
     let moduleObjs = [];

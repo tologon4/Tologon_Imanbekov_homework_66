@@ -1,0 +1,291 @@
+@model Resume
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_LayoutResumeDetail";
+}
+
+<div class="row row-cols-1 row-cols-lg-2 mt-5">
+  <div class="col-12 col-lg-7 border border-primary">
+    <div class="container">
+      <div class="leftPanel">
+        <img src="@Model.UserAvatar" id="ravatar"/>
+        <span class="resume-edit-button" role="button" data-field="avatar" data-field2="Фото профиля"><i class="bi bi-pencil fs-5"></i></span>
+        <div class="details">
+          <div class="item bottomLineSeparator">
+            <h2>CONTACT</h2>
+            <div class="smallText">
+              <p>
+                <i class="fa fa-phone contactIcon" aria-hidden="true"></i>
+                <span id="rphone">@Model.PhoneNumber</span>
+                <span class="resume-edit-button" role="button" data-field="phone" data-field2="Номер телефона"><i class="bi bi-pencil fs-5"></i></span>
+              </p>
+              <p>
+                <i class="fa fa-envelope contactIcon" aria-hidden="true"></i>
+                <a href="mailto:@Model.Email">
+                  <span id="remail">@Model.Email</span>
+                </a>
+                <span class="resume-edit-button" role="button" data-field="email" data-field2="Email"><i class="bi bi-pencil fs-5"></i></span>
+              </p>
+            </div>
+          </div>
+          <div class="item">
+            <h2>EDUCATION</h2>
+            @if (Model.Modules != null)
+            {
+              foreach (var module in Model.Modules.Where(m => m.Identity == "eduEx"))
+              {
+                <div class="smallText moduleDiv-@module.Id">
+                  <p class="bolded white">
+                    <span id="rrole">@module.Role</span>
+                    <span class="resume-edit-button" role="button" data-field="role" data-field2="Роль" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                  </p>                 
+                  <p>
+                    <span id="rorgan">@module.OrganizationName</span>
+                    <span class="resume-edit-button" role="button" data-field="organ" data-field2="Учебное заведение" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                  </p>
+                  <p>
+                    <small>What learned:</small><span id="rresponse">@module.Responsibilities</span>
+                    <span class="resume-edit-button" role="button" data-field="response" data-field2="Чему научились" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                  </p>
+                  <br/>
+                  <p>
+                    <span id="rstartedDate">@module.StartedWorking.Value.Date</span>
+                    <span class="resume-edit-button" role="button" data-field="startedDate" data-field2="Начало обучения" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                    -- <span id="rendedDate">@module.EndedWorking.Value.Date</span>
+                    <span class="resume-edit-button" role="button" data-field="endedDate" data-field2="Конец обучения" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                  </p>
+                </div>
+              }
+            }
+          </div>
+        </div>
+      </div>
+      <div class="rightPanel">
+        <div>
+          <h4>
+            <span id="rlastName">@Model.UserLastName</span>
+            <span class="resume-edit-button" role="button" data-field="lastName" data-field2="Фамилие"><i class="bi bi-pencil fs-5"></i></span>
+            &nbsp;
+            <span id="rfirstName">@Model.UserFirstName</span>
+            <span class="resume-edit-button" role="button" data-field="firstName" data-field2="Имя"><i class="bi bi-pencil fs-5"></i></span>
+          </h4>
+          <div>
+            <h4>
+              <span id="rcategory">@Model.Category</span>
+              <span class="resume-edit-button" role="button" data-field="category" data-field2="Category"><i class="bi bi-pencil fs-5"></i></span>
+            </h4>
+            <h4>
+              <span id="rsalary">@Model.ExpectedSalary</span>
+              <span class="resume-edit-button" role="button" data-field="salary" data-field2="Expected Salary"><i class="bi bi-pencil fs-5"></i></span>
+            </h4>
+          </div>
+        </div>
+        <div>
+          <h4>For:</h4>
+          <h4>
+            <span id="rtitle">@Model.Title</span>
+            <span class="resume-edit-button" role="button" data-field="title" data-field2="Title"><i class="bi bi-pencil fs-5"></i></span>
+          </h4>
+        </div>
+        <div class="workExperience">
+          <h3>Work experience</h3>
+          <ul>
+            @if (Model.Modules != null)
+            {
+              @foreach (var module in Model.Modules.Where(m => m.Identity == "jobEx"))
+              {
+                <li>
+                  <div class="jobPosition moduleDiv-@module.Id">
+                    <p>
+                      <span class="bolded" id="rrole">@module.Role</span>
+                      <span class="resume-edit-button" role="button" data-field="role" data-field2="Должность" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                    </p>
+                    <p>
+                      <span id="rstartedDate">@module.StartedWorking.Value.Date</span>
+                      <span class="resume-edit-button" role="button" data-field="startedDate" data-field2="Начало работы" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                      -- <span id="rendedDate">@module.EndedWorking.Value.Date</span>
+                      <span class="resume-edit-button" role="button" data-field="endedDate" data-field2="Конец работы" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                    </p>
+                  </div>
+                  <div class="projectName bolded">
+                    <span>Accounting project name | Company name</span>
+                  </div>
+                  <div class="smallText">
+                    <p>
+                      <span id="rorgan">@module.OrganizationName</span>
+                      <span class="resume-edit-button" role="button" data-field="organ" data-field2="Название компании" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                    </p>
+                    <p>
+                      <span class="bolded">Responsibility: </span>
+                      <span id="rresponse">@module.Responsibilities</span>
+                      <span class="resume-edit-button" role="button" data-field="response" data-field2="Ваши обязанности" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                    </p>
+                  </div>
+                </li>
+              }
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-5">
+    <div class="mt-5 ps-3" id="res-change-div">
+      
+    </div>
+  </div>
+</div>
+
+@section Scripts
+{
+  <script>
+    const editResume = '@Url.Action("Edit", "Resume")';
+    document.addEventListener('DOMContentLoaded', function() {
+     
+      document.querySelectorAll('.resume-edit-button').forEach(button => {
+        button.addEventListener('click', function() {
+          const field = this.dataset.field;
+          const field2 = this.dataset.field2;
+          const moduleId = this.dataset.field3;
+          console.log(field);
+          console.log(field2);
+          console.log(moduleId);
+          let currentValue;
+          const formId = 'form-' + field;
+
+          if (document.getElementById(formId)) {
+            document.getElementById(formId).remove();
+            return;
+          }
+          
+          
+          switch (field) {
+            case 'email':
+              currentValue = document.getElementById('remail').textContent.trim();
+              break;
+            case 'role':
+              currentValue = $('.moduleDiv-' + moduleId+' #rrole').val();
+              break;
+            case 'organ':
+              currentValue = $('.moduleDiv-' + moduleId+' #rorgan').val();
+              break;
+            case 'response':
+              currentValue = $('.moduleDiv-' + moduleId+' #rresponse').val();
+              break;
+            case 'startedDate':
+              currentValue = $('.moduleDiv-' + moduleId+' #rstartedDate').val();
+              break;
+            case 'endedDate':
+              currentValue = $('.moduleDiv-' + moduleId+' #rendedDate').val();
+              break;
+            case 'phone':
+              currentValue = document.getElementById('rphone').textContent.trim();
+              break;
+            case 'title':
+              currentValue = document.getElementById('rtitle').textContent.trim();
+              break;
+            case 'category':
+              currentValue = document.getElementById('rcategory').textContent.trim();
+              break;
+            case 'firstName':
+              currentValue = document.getElementById('rfirstName').textContent.trim();
+              break;
+            case 'lastName':
+              currentValue = document.getElementById('rlastName').textContent.trim();
+              break;
+            case 'salary':
+              currentValue = document.getElementById('rsalary').textContent.trim();
+              break;
+            default:
+              currentValue = '';
+          }
+
+          const formHtml = `
+            <form id="${formId}" enctype="multipart/form-data">
+              <div class="form-group" id="editForm">
+                <label for="editInput">Новый ${field2}:</label><br>
+                <label for="editInput" id="errorTaken" class="text-danger"></label>
+                <input type="${field === 'email' ? 'email' : 
+                field === 'avatar' ? 'file' : field ==='salary' ? 'number' : 
+                field==='startedDate'? 'date' : field === 'endedDate' ? 'date' : 'text'}"
+                class="form-control" id="editInput" value="${currentValue}">
+              </div>
+              <button type="submit" class="btn btn-primary mt-4">Сохранить</button>
+              <button type="button" class="btn btn-light mt-4 ms-3" id="cancel-button">Отмена</button>
+            </form>
+          `;
+
+          document.getElementById('res-change-div').innerHTML = formHtml;
+
+          document.getElementById(formId).addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const resumeId = '@Model.Id';
+            let newValue;
+            const formData = new FormData();
+            
+            formData.append('moduleId', moduleId);
+            formData.append('resumeId', resumeId);
+            formData.append('key', field);
+
+            if (field === 'avatar') {
+              const file = document.getElementById('editInput').files[0];
+              formData.append('uploadedFile', file);
+              newValue = file.name;
+            } else {
+              newValue = document.getElementById('editInput').value;
+              formData.append('value', newValue);
+            }
+
+            try {
+              const response = await fetch(editResume, {
+                method: 'POST',
+                body: formData
+              });
+              const result = await response.json();
+              if (result.result) {
+                if (field === 'avatar') {
+                  $('#r' + field).attr('src', result.avatar)
+                } else {
+                  if (moduleId>0){
+                    $('.moduleDiv-' + moduleId+' #r'+field).text(newValue);
+                  }
+                  else{
+                    document.getElementById('r' + field).textContent = newValue;
+                  }
+                }
+              } else {
+                showError('Невозможно изменить ' + field2);
+              }
+            } catch (error) {
+              console.error('Ошибка загрузки:', error);
+              showError('Произошла ошибка при изменении ' + field2);
+            } finally {
+            }
+
+            alert('Новое значение: ' + newValue);
+            document.getElementById('res-change-div').innerHTML = '';
+          });
+
+          document.getElementById('cancel-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('res-change-div').innerHTML = '';
+          });
+
+          function showError(message) {
+            const errorElement = document.createElement('span');
+            errorElement.classList.add('mx-auto', 'text-danger');
+            errorElement.id = 'errorEdit';
+            errorElement.textContent = message;
+            document.getElementById('editForm').appendChild(errorElement);
+            setTimeout(() => {
+              errorElement.remove();
+            }, 5000);
+          }
+        });
+      });
+    });
+  </script>
+}
+
+  

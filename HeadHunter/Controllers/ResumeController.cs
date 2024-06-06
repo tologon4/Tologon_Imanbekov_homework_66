@@ -1,7 +1,9 @@
 using System.Text.Json.Serialization;
 using HeadHunter.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace HeadHunter.Controllers;
@@ -10,17 +12,110 @@ public class ResumeController : Controller
 {
     private HeadHunterDb _db;
     private UserManager<User> _userManager;
+    private IWebHostEnvironment _environment;
 
-    public ResumeController(HeadHunterDb db, UserManager<User> userManager)
+    public ResumeController(HeadHunterDb db, UserManager<User> userManager, IWebHostEnvironment environment)
     {
         _db = db;
         _userManager = userManager;
+        _environment = environment;
     }
 
+
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
+    {
+        Resume resume = await _db.Resumes.Include(m => m.Modules).FirstOrDefaultAsync(r => r.Id == id);
+        return View(resume);
+    }
+    
     [HttpGet]
     public async Task<IActionResult> Create()
     {
         return View();
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Edit(int resumeId, int? moduleId, string key, string? value, IFormFile? uploadedFile)
+    {
+        User? user = await _userManager.GetUserAsync(User);
+        Resume? resume = await _db.Resumes.FirstOrDefaultAsync(r => r.Id == resumeId);
+        Module? module = await _db.Modules.FirstOrDefaultAsync(m => m.Id == moduleId);
+        bool result;
+        switch (key)
+        {
+            case "role":
+                module.Role = value;
+                result = true;
+                break;
+            case "organ":
+                module.OrganizationName = value;
+                result = true;
+                break;
+            case "response":
+                module.Responsibilities = value;
+                result = true;
+                break;
+            case "startedDate":
+                module.StartedWorking = DateTime.Parse(value);
+                result = true;
+                break;
+            case "endedDate":
+                module.EndedWorking = DateTime.Parse(value);
+                result = true;
+                break;
+            case "email":
+                resume.Email = value;
+                result = true;
+                break;
+            case "firstName":
+                resume.UserFirstName = value;
+                result = true;
+                break;
+            case "lastName":
+                resume.UserLastName = value;
+                result = true;
+                break;
+            case "phone":
+                resume.PhoneNumber = value;
+                result = true;
+                break;
+            case "avatar":
+                var buffer = resume.UserAvatar.Split('=');
+                var buffer2 = buffer[buffer.Length - 1].Split('.');
+                string newFileName = Path.ChangeExtension($"{resume.UserLastName.Trim()}-ResumeN={int.Parse(buffer2[0])+1}", Path.GetExtension(uploadedFile.FileName));
+                string path= $"/userImages/" + newFileName.Trim();
+                using (var fileStream = new FileStream(_environment.WebRootPath + path, FileMode.Create))
+                {
+                    await uploadedFile.CopyToAsync(fileStream);
+                }
+                resume.UserAvatar = path;
+                result = true;
+                break;
+            case "title":
+                resume.Title = value;
+                result = true;
+                break;
+            case "category":
+                resume.Category = value;
+                result = true;
+                break;
+            case "salary":
+                resume.ExpectedSalary = int.Parse(value);
+                result = true;
+                break;
+            default:
+                result = false;
+                break;
+        }
+        resume.EditedTime = DateTime.UtcNow;
+        if (moduleId != null)
+            _db.Modules.Update(module);
+        _db.Resumes.Update(resume);
+        _db.Users.Update(user);
+        await _db.SaveChangesAsync();
+        return Ok(new {result, avatar = user.Avatar});
     }
 
     [HttpPost]
@@ -34,6 +129,7 @@ public class ResumeController : Controller
             Resume resume = model;
             resume.UserId = user.Id;
             resume.User = user;
+            resume.UserAvatar = user.Avatar;
             resume.Published = false;
             resume.CreatedTime = DateTime.UtcNow;
             foreach (var buff in buffer)
@@ -61,6 +157,35 @@ public class ResumeController : Controller
         }
         ModelState.AddModelError("", "Не получилось создать резюме!");
         return View(model);
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Update(int id)
+    {
+        Resume resume = await _db.Resumes.FirstOrDefaultAsync(r => r.Id == id);
+        resume.EditedTime = DateTime.UtcNow;
+        _db.Resumes.Update(resume);
+        await _db.SaveChangesAsync();
+        return Ok(resume.EditedTime.ToString());
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Delete(int? id)
+    {
+        User? user = await _userManager.GetUserAsync(User);
+        Resume? resume = await _db.Resumes.Include(m => m.Modules).FirstOrDefaultAsync(r => r.Id == id);
+        if (resume != null)
+        {
+            _db.Modules.RemoveRange(resume.Modules);
+            user.Resumes.Remove(resume);
+            _db.Resumes.Remove(resume);
+            _db.Users.Update(user);
+            await _db.SaveChangesAsync();
+            return Ok(true);
+        }
+        return Ok(false);
     }
 
 }
