@@ -18,8 +18,9 @@ public class MainController : Controller
     }
     
     
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? filter)
     {
+        ViewBag.Categories = _db.Categories.Select(c => c.Name).ToList();
         int? userId;
         try
         {
@@ -52,6 +53,11 @@ public class MainController : Controller
                 ViewBag.CurrentUserResumes = JsonConvert.SerializeObject(curUserResumes);
             }
             
+        }
+
+        if (filter != null)
+        {
+            vacancies = vacancies.Where(v => v.Category == filter).ToList();
         }
         return View(vacancies);
     }

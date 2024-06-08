@@ -1,3 +1,4 @@
+using System.Formats.Asn1;
 using HeadHunter.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,4 +28,11 @@ public class EmployerController : Controller
         }
         return NotFound();
     }
+
+    public async Task<IActionResult> Applicants()
+    {
+        var users = _db.Users.Where(u => u.Role == "Соискатель").ToList();
+        return View(users);
+    }
+
 }

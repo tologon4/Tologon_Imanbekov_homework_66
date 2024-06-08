@@ -30,8 +30,28 @@
     </div>
     
     <div class="container">
+        
         @if (Model.Count > 0)
         {
+            <div class="col-6 mx-auto">
+                <form asp-action="Index" method="get" class="mb-4">
+                    <div class="input-group mt-2">
+                        <label for="category"><span class="text-danger"></span></label>
+                        <div class="input-group">
+                            <select class="form-select" name="filter" id="category">
+                                <option disabled="disabled" selected="selected">Выберите Категорию</option>
+                                @foreach (var category in ViewBag.Categories)
+                                {
+                                    <option value="@category">@category</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="filter">Фильтровать</button>
+                    </div>
+                </form>
+           
+
+            </div>
             <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s"
                 style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">Список вакансий</h1>
             @foreach (var vacancy in Model)
@@ -68,5 +88,7 @@
     let currentUserResumes = JSON.parse('@Html.Raw(ViewBag.CurrentUserResumes)');
     let chatResults =  '@Url.Action("ChatResults", "Chat")';
     let currentUserId = '@ViewBag.CurrentUserId';
-
+    
+  
+    
 </script>

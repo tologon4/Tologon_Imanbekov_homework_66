@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace HeadHunter.Controllers;
 
@@ -95,5 +96,21 @@ public class ChatController : Controller
             return Ok(message);
         }
         return NotFound();
+    }
+
+    public async Task<IActionResult> Response(int? userId)
+    {
+        var chats = _db.Chats.Include(c => c.Vacancy)
+            .Include(c => c.Applicant).ToList();
+        var curUserResumes = _db.Resumes
+            .Where(r => r.Published == true && r.UserId == userId)
+            .Select(r => new { r.Id, r.Title, r.UserId})
+            .ToList();
+        User currentUser = await _db.Users.Include(r => r.Resumes)
+            .FirstOrDefaultAsync(u =>  u.Id == userId);
+        ViewBag.CurrentUser = currentUser;
+        ViewBag.CurrentUserId = currentUser.Id;
+        ViewBag.CurrentUserResumes = JsonConvert.SerializeObject(curUserResumes);
+        return View(chats);
     }
 }

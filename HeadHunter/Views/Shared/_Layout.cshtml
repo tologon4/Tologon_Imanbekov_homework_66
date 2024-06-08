@@ -41,12 +41,19 @@
                     <li class="nav-item">
                         <a class="nav-link mx-lg-2 text-dark" asp-controller="Main" asp-action="Index">Домой</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link mx-lg-2 text-dark" href="#">Соискателям</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link mx-lg-2 text-dark" href="#"> Работодателям </a>
-                    </li>
+                    @if (CurrentUserGet().Role == "Соискатель")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 text-dark" href="#">Соискателям</a>
+                        </li>
+                    }
+                    @if (CurrentUserGet().Role == "Работадатель")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 text-dark" asp-controller="Employer" asp-action="Applicants"> Работодателям </a>
+                        </li>
+                    }
+                    
                 </ul>
             </div>
         </div>

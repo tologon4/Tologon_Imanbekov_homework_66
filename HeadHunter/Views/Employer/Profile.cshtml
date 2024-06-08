@@ -14,6 +14,7 @@
   <div class="col-md-6 pb-5">
     <div class="mt-5">
       <a asp-action="Create" asp-controller="Vacancy" type="button" class="btn btn-outline-success rounded-3">Создать вакансию</a>
+      <a asp-action="Response" asp-controller="Chat" asp-route-userId="@Model.Id" type="button" class="btn btn-outline-success rounded-3">Отклики</a>
     </div>
   </div>
 </div>
