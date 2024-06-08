@@ -24,4 +24,5 @@ public class Vacancy
     public DateTime? CreatedTime { get; set; }
     public DateTime? EditedTime { get; set; }
     public bool? Published { get; set; }
+    public ICollection<Chat>? Chats { get; set; }
 }

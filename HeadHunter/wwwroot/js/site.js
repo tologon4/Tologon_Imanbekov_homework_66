@@ -1,5 +1,51 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿
+
+function modalAdder(resumes, vacancyId) {
+    let modal = $(`
+        <div class="modal fade"> 
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"> 
+                <div class="modal-content"> 
+                    <div class="modal-header"> 
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">VACANCY NAME ${vacancyId}</h1> 
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> 
+                    </div> 
+                    <div class="chats modal-body">
+            <div id="messages-place" class=" py-5 px-3 msg-page pt-5">
+              
+              
+              
+              
+            </div>
+          </div>
+                   
+                    <div class=" modal-footer  py-4 px-4 border-top">
+                    <div class="col-12">
+                                            <div class="row row-cols-2">
+                            <div class="col-6">
+                                <div class="input-group">
+                                    <select class="form-select" id="resumeInput">
+                                        <option disabled="disabled" selected="selected">Выберите резюме</option>
+                                        ${
+        resumes.map(resume =>
+            `<option value="${resume.Id}">${resume.Title}</option>`).join('')
+    }
+                                    </select>
+                                    <button type="button" class="btn border border-primary btn-light text-primary resumeOrMessage-send">Отправить</button>
+                                </div>
+                            </div>
+                            <div class="col-6 d-flex align-items-center">
+                                <textarea class="form-control" id="messageInput" placeholder="Введите сообщение..." type="text" rows="1"></textarea>
+                                <button type="button" class="btn border border-primary btn-light text-primary resumeOrMessage-send">Отправить</button>
+                            </div>
+                        </div>
+
+</div>
+                    </div> 
+                </div> 
+            </div> 
+        </div>`);
+    modal.modal('show');
+}
 
 function checkUserNameEmail() {
     let value = $('#editInput').val();
@@ -32,7 +78,7 @@ function onChange() {
 function isPublishedCheck(data, resumeId) {
     if (data) {
         $('#publicIdent-'+resumeId).text('Опубликован');
-        $('#publicIdentBtn-' +resumeId).text('ОТ-публиковать');
+        $('#publicIdentBtn-' +resumeId).text('Снять с публикации');
     } else {
         $('#publicIdent-'+resumeId).text('Не опубликован');
         $('#publicIdentBtn-'+resumeId).text('Опубликовать');
@@ -41,7 +87,63 @@ function isPublishedCheck(data, resumeId) {
 
 $().ready(function (){
 
+    $('.reply-btn').click(function() {
+        console.log("Reply button clicked");
+        let vacancyId = $(this).data('field');
+        console.log("Vacancy ID:", vacancyId);
+        modalAdder(currentUserResumes, vacancyId);
+        function loadMessages() {
+            $.ajax({
+                url: chatResults,
+                type: 'GET',
+                data: { 'vacancyId': vacancyId, 'applicantId': currentUserId },
+                success: function(data) {
+                    console.log('messages loaded');
+                    $('#messages-place').html(data);
+                }
+            });
+        }
 
+        loadMessages();
+
+        setInterval(function() {
+            loadMessages();
+        }, 5000);
+
+        $(document).on('click', '.resumeOrMessage-send', function(e) {
+            e.preventDefault();
+            console.log('resume btn clicked');
+            let resumeId = $('#resumeInput').val();
+            let message = $('#messageInput').val();
+            $.ajax({
+                url: sendMessage,
+                type: 'POST',
+                data: {
+                    vacancyId: vacancyId,
+                    resumeId: resumeId,
+                    messageContent: message,
+                    applicantId: currentUserId
+                },
+                success: function(response) {
+                    if (response) {
+                        console.response;
+                        alert('Резюме отправлено успешно!');
+                    } else {
+                        alert('Ошибка при отправке резюме.');
+                    }
+                }
+            });
+
+        });
+
+        $('.modal').on('hidden.bs.modal', function() {
+            clearInterval(intervalId);
+        });
+        
+    });
+    
+    
+    
     $('.vacancy-edit-button').click(function () {
         let field = $(this).data('field');
         let field2 = $(this).data('field2');
@@ -154,14 +256,16 @@ $().ready(function (){
     });
 
 
-    resumeModel.forEach(function (resumeId) {
-        let isPublished = $('#isPublished-' + resumeId).val();
-        isPublishedCheck(isPublished, resumeId);
-    });
+    if (resumeModel !== 0){
+        resumeModel.forEach(function (resumeId) {
+            let isPublished = $('#isPublished-' + resumeId).val();
+            isPublishedCheck(isPublished, resumeId);
+        });
+    }
 
     $('.publicResume').click(function (e) {
         e.preventDefault();
-        var resumeId = $(this).data('field');
+        let resumeId = $(this).data('field');
         console.log(resumeId);
         $.ajax({
             url: publicUrl,
@@ -208,95 +312,7 @@ $().ready(function (){
         });
     });
     
-    let moduleCounter = 0;
-    let moduleObjs = [];
-
-    function addModule(module = {}) {
-        moduleCounter++;
-        const moduleType = module.type || '';
-        const startDate = module.startDate || '';
-        const endDate = module.endDate || '';
-        const organization = module.organization || '';
-        const role = module.role || '';
-        const responsibilities = module.responsibilities || '';
-        const formId = `module-form-${moduleCounter}`;
-        let orgName, roleName, responseName;
-
-        switch (moduleType) {
-            case 'jobEx':
-                orgName = 'Название Компании';
-                roleName = 'Должность';
-                responseName = 'Обязанности';
-                break;
-            case 'eduEx':
-                orgName = 'Название Курса, Университета';
-                roleName = 'Ваша роль';
-                responseName = 'Чему вы научились';
-                break;
-        }
-
-        const resumeFormHtml = `
-                    <div class="module mt-4" id="${formId}">
-                        <input type="hidden" name="Modules[${moduleCounter}].Type" value="${moduleType}">
-                        <div class="row row-cols-2">
-                            <div class="col col-6">
-                                <label for="Modules_${moduleCounter}__StartDate">Дата начала</label> 
-                                <div class="input-group">
-                                    <input type="date" class="form-control" name="Modules[${moduleCounter}].StartDate" placeholder="Дата начала" id="Modules_${moduleCounter}__StartDate" value="${startDate}" required>
-                                </div>
-                            </div>
-                            <div class="col col-6">
-                                <label for="Modules_${moduleCounter}__EndDate">Дата окончания</label> 
-                                <div class="input-group">
-                                    <input type="date" class="form-control" name="Modules[${moduleCounter}].EndDate" placeholder="Дата окончания" id="Modules_${moduleCounter}__EndDate" value="${endDate}" required>
-                                </div>
-                            </div>
-                            <div class="col col-6 mt-3">
-                                <label for="Modules_${moduleCounter}__Organization">${orgName}</label> 
-                                <div class="input-group">
-                                    <input type="text" class="form-control" name="Modules[${moduleCounter}].Organization" placeholder="${orgName}" id="Modules_${moduleCounter}__Organization" value="${organization}" required>
-                                </div>
-                            </div>
-                            <div class="col col-6 mt-3">
-                                <label for="Modules_${moduleCounter}__Role">${roleName}</label> 
-                                <div class="input-group">
-                                    <input type="text" class="form-control" name="Modules[${moduleCounter}].Role" placeholder="${roleName}" id="Modules_${moduleCounter}__Role" value="${role}" required>
-                                </div>
-                            </div>
-                            <div class="col col-12 mt-3">
-                                <label for="Modules_${moduleCounter}__Response">${responseName}</label>
-                                <div class="input-group">
-                                    <textarea class="form-control h-100" name="Modules[${moduleCounter}].Response" id="Modules_${moduleCounter}__Response" placeholder="${responseName}" rows="4" required></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="hidden" value="${moduleType}" id="Modules_${moduleCounter}__Identity"/>
-                        <button type="button" class="btn btn-light mt-4 ms-3 module-cancel-button">Отмена</button>
-                    </div>`;
-
-        $('#module-change-div').append(resumeFormHtml);
-
-        $(`#${formId} .module-cancel-button`).click(function() {
-            $(`#${formId}`).remove();
-        });
-
-        const moduleObj = {
-            'StartedWorking': startDate,
-            'EndedWorking': endDate,
-            'OrganizationName': organization,
-            'Role': role,
-            'Responsibilities': responsibilities,
-            'Identity': moduleType
-        };
-
-        moduleObjs.push(moduleObj);
-    }
-
-    $('.add-module-button').click(function(e) {
-        e.preventDefault();
-        const resumeField = $(this).data('field');
-        addModule({ type: resumeField });
-    });
+   
 
     $('#main-form').submit(function() {
         const moduleForms = $('.module');

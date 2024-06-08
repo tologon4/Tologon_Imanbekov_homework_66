@@ -24,22 +24,34 @@
       <tr>
         <td>Имя пользователя</td>
         <td id="rusername">@Model.UserName</td>
-        <td><span class="edit-button text-primary" role="button" data-field="username" data-field2="Имя пользователя">Изменить</span></td>
+        @if (Model.Id == ViewBag.CurrentUser.Id)
+        {
+          <td><span class="edit-button text-primary" role="button" data-field="username" data-field2="Имя пользователя">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td >Email</td>
         <td id="remail">@Model.Email</td>
-        <td><span class="edit-button text-primary" role="button" data-field="email" data-field2="Email">Изменить</span></td>
+        @if (Model.Id == ViewBag.CurrentUser.Id)
+        {
+          <td><span class="edit-button text-primary" role="button" data-field="email" data-field2="Email">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td >Пароль</td>
         <td id="rpassword">***</td>
-        <td><span class="edit-button text-primary" role="button" data-field="password" data-field2="Пароль">Изменить</span></td>
+        @if (Model.Id == ViewBag.CurrentUser.Id)
+        {
+          <td><span class="edit-button text-primary" role="button" data-field="password" data-field2="Пароль">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td >Номер телефона</td>
         <td id="rphone">@Model.PhoneNumber</td>
-        <td><span class="edit-button text-primary" role="button" data-field="phone" data-filed2="Номер телефона">Изменить</span></td>
+        @if (Model.Id == ViewBag.CurrentUser.Id)
+        {
+          <td><span class="edit-button text-primary" role="button" data-field="phone" data-filed2="Номер телефона">Изменить</span></td>
+        }
       </tr>
       </tbody>
     </table>
@@ -51,7 +63,9 @@
   <div class="text-center">
     <h2 class="">Мои резюме</h2>
   </div>
-  <div class="row row-cols-1 row-sm-cols-2 d-flex mt-4 g-4">
+  @if (Model.Id == ViewBag.CurrentUser.Id)
+  {
+    <div class="row row-cols-1 row-sm-cols-2 d-flex mt-4 g-4">
     @if (Model.Resumes.Count > 0 && Model.Resumes != null)
     {
       @foreach (var resume in Model.Resumes)
@@ -90,6 +104,8 @@
     }
     
   </div>
+  }
+  
 
 </div>
 
@@ -99,11 +115,11 @@
   <script>
     let editCheckUsernameEmail = '@Url.Action("EditCheckUsernameEmail", "Validation")';
     let edit = '@Url.Action("Edit", "Applicant")';
-    let  updateUrl = '@Url.Action("Update", "Resume")';
+    let updateUrl = '@Url.Action("Update", "Resume")';
     let deleteUrl = '@Url.Action("Delete", "Resume")';
     let publicUrl = '@Url.Action("Public", "Resume")';
     let role = 'applicant';
-    let resumeModel = @Html.Raw(Json.Serialize(Model.Resumes.Select(p => p.Id)));
+    let resumeModel = @Html.Raw(Json.Serialize(Model.Resumes.Count == 0 ? 0 : Model.Resumes.Select(p => p.Id)));
                 
   </script>
 

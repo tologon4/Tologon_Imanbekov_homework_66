@@ -2,6 +2,7 @@ using HeadHunter.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace HeadHunter.Controllers;
@@ -22,10 +23,10 @@ public class AccountController : Controller
         _signInManager = signInManager;
     }
 
-    public async Task<IActionResult> Profile()
+    public async Task<IActionResult> Profile(int? id)
     {
-        User user = await _userManager.GetUserAsync(User);
-        return RedirectToAction("Profile", $"{(user.Role == "Соискатель" ? "Applicant" : "Employer")}");
+        User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
+        return RedirectToAction("Profile", $"{(user.Role == "Соискатель" ? "Applicant" : "Employer")}", new {id});
     }
     
     [HttpGet]
@@ -53,7 +54,7 @@ public class AccountController : Controller
                 {
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                         return Redirect(model.ReturnUrl);
-                    return RedirectToAction("Index", "Vacancy");
+                    return RedirectToAction("Index", "Main");
                 }
             }
             ModelState.AddModelError("LoginValue", "Invalid email, login or password!");
@@ -96,7 +97,7 @@ public class AccountController : Controller
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return RedirectToAction("Index", "Vacancy");
+                return RedirectToAction("Index", "Main");
             }
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
@@ -111,6 +112,6 @@ public class AccountController : Controller
     public async Task<IActionResult> LogOut()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Vacancy");
+        return RedirectToAction("Index", "Main");
     }
 }

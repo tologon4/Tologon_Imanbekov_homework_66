@@ -27,10 +27,20 @@
                 </a>
                 <span class="resume-edit-button" role="button" data-field="email" data-field2="Email"><i class="bi bi-pencil fs-5"></i></span>
               </p>
+              <p>
+                <i class="fa fa-phone contactIcon" aria-hidden="true"></i>
+                <span id="rfacebook">@Model.Facebook</span>
+                <span class="resume-edit-button" role="button" data-field="facebook" data-field2="FaceBook"><i class="bi bi-pencil fs-5"></i></span>
+              </p>
+              <p>
+                <i class="fa fa-phone contactIcon" aria-hidden="true"></i>
+                <span id="rlinkedIn">@Model.LinkedIn</span>
+                <span class="resume-edit-button" role="button" data-field="linkedIn" data-field2="LinkedIn"><i class="bi bi-pencil fs-5"></i></span>
+              </p>
             </div>
           </div>
           <div class="item">
-            <h2>EDUCATION</h2>
+            <h4>EDUCATION</h4>
             @if (Model.Modules != null)
             {
               foreach (var module in Model.Modules.Where(m => m.Identity == "eduEx"))
@@ -50,9 +60,9 @@
                   </p>
                   <br/>
                   <p>
-                    <span id="rstartedDate">@module.StartedWorking.Value.Date</span>
+                    <span id="rstartedDate">@module.StartedWorking.Value.Date.ToString("MM/dd/yyyy")</span>
                     <span class="resume-edit-button" role="button" data-field="startedDate" data-field2="Начало обучения" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
-                    -- <span id="rendedDate">@module.EndedWorking.Value.Date</span>
+                    -- <span id="rendedDate">@module.EndedWorking.Value.Date.ToString("MM/dd/yyyy")</span>
                     <span class="resume-edit-button" role="button" data-field="endedDate" data-field2="Конец обучения" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
                   </p>
                 </div>
@@ -101,12 +111,6 @@
                       <span class="bolded" id="rrole">@module.Role</span>
                       <span class="resume-edit-button" role="button" data-field="role" data-field2="Должность" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
                     </p>
-                    <p>
-                      <span id="rstartedDate">@module.StartedWorking.Value.Date</span>
-                      <span class="resume-edit-button" role="button" data-field="startedDate" data-field2="Начало работы" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
-                      -- <span id="rendedDate">@module.EndedWorking.Value.Date</span>
-                      <span class="resume-edit-button" role="button" data-field="endedDate" data-field2="Конец работы" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
-                    </p>
                   </div>
                   <div class="projectName bolded">
                     <span>Accounting project name | Company name</span>
@@ -116,6 +120,13 @@
                       <span id="rorgan">@module.OrganizationName</span>
                       <span class="resume-edit-button" role="button" data-field="organ" data-field2="Название компании" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
                     </p>
+                    <p>
+                      <span id="rstartedDate">@module.StartedWorking.Value.ToString("MM/dd/yyyy")</span>
+                      <span class="resume-edit-button" role="button" data-field="startedDate" data-field2="Начало работы" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                      -- <span id="rendedDate">@module.EndedWorking.Value.Date.ToString("MM/dd/yyyy")</span>
+                      <span class="resume-edit-button" role="button" data-field="endedDate" data-field2="Конец работы" data-field3="@module.Id"><i class="bi bi-pencil fs-5"></i></span>
+                    </p>
+                    
                     <p>
                       <span class="bolded">Responsibility: </span>
                       <span id="rresponse">@module.Responsibilities</span>
@@ -181,6 +192,12 @@
               break;
             case 'phone':
               currentValue = document.getElementById('rphone').textContent.trim();
+              break;
+            case 'facebook':
+              currentValue = document.getElementById('rfacebook').textContent.trim();
+              break;
+            case 'linkedIn':
+              currentValue = document.getElementById('rlinkedIn').textContent.trim();
               break;
             case 'title':
               currentValue = document.getElementById('rtitle').textContent.trim();

@@ -175,6 +175,13 @@ body {
   color: rgba(255, 255, 255, 0.75);
 }
 
+.job-item {
+  border: 1px solid transparent;
+  border-radius: 2px;
+  box-shadow: 0 0 45px rgba(0, 0, 0, .08);
+  transition: .5s;
+}
+
 .footer-text a {
   text-decoration: none;
   font-size: 16px;

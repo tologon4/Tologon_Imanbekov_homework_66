@@ -16,10 +16,15 @@ public class EmployerController : Controller
         _userManager = userManager;
     }
 
-    public async Task<IActionResult> Profile()
+    public async Task<IActionResult> Profile(int? id)
     {
-        User user = await _db.Users.Include(v => v.Vacancies)
-            .FirstOrDefaultAsync(u => u.Id == int.Parse(_userManager.GetUserId(User)));
-        return View(user);
+        if (id.HasValue)
+        {
+            User user = await _db.Users.Include(v => v.Vacancies)
+                .FirstOrDefaultAsync(u => u.Id == id);
+            ViewBag.CurrentUser = await _userManager.GetUserAsync(User);
+            return View(user);
+        }
+        return NotFound();
     }
 }

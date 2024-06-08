@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace HeadHunter.Controllers;
 
@@ -16,34 +17,35 @@ public class VacancyController : Controller
         _db = db;
         _userManager = userManager;
     }
-
-    [HttpGet]
-    public async Task<IActionResult> Index()
-    {
-        return View();
-    }
+    
     
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        ViewBag.Categories = new List<string>()
-        {
-            "Программист", "Бухгалтер", "Экономист", "Слесарь", "Учитель", "Доктор", "Инженер", "Водитель", "Охраник", "Садовник"
-        };
+        ViewBag.Categories = _db.Categories.Select(c => c.Name).ToList();
         return View();
     }
 
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> Details(int id)
+    public async Task<IActionResult> Details(int? id)
     {
-        ViewBag.Categories = new List<string>()
+        if (id.HasValue)
         {
-            "Программист", "Бухгалтер", "Экономист", "Слесарь", "Учитель", "Доктор", "Инженер", "Водитель", "Охраник", "Садовник"
-        };
-        Vacancy vacancy = await _db.Vacancies.FirstOrDefaultAsync(v => v.Id == id);
-        return View(vacancy);
+            ViewBag.Categories = _db.Categories.Select(c => c.Name).ToList();
+            User currentUser = await _userManager.GetUserAsync(User);
+            ViewBag.CurrentUser = currentUser;
+            ViewBag.CurrentUserId = currentUser.Id;
+            var curUserresumes = _db.Resumes
+                .Where(r => r.Published == true)
+                .Where(r => r.UserId == currentUser.Id)
+                .Select(r => new { r.Id, r.Title, r.UserId }).ToList();
+            ViewBag.CurrentUserResumes = JsonConvert.SerializeObject(curUserresumes);
+            Vacancy vacancy = await _db.Vacancies.FirstOrDefaultAsync(v => v.Id == id);
+            return View(vacancy);
+        }
+        return NotFound();
     }
 
     [Authorize]
@@ -94,10 +96,7 @@ public class VacancyController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(Vacancy? model)
     {
-        ViewBag.Categories = new List<string>()
-        {
-            "Программист", "Бухгалтер", "Экономист", "Слесарь", "Учитель", "Доктор", "Инженер", "Водитель", "Охраник", "Садовник"
-        };
+        ViewBag.Categories = _db.Categories.Select(c => c.Name).ToList();
         User? user = await _userManager.GetUserAsync(User);
         if (ModelState.IsValid && user != null)
         {
@@ -109,7 +108,7 @@ public class VacancyController : Controller
             user.Vacancies.Add(model);
             _db.Users.Update(user);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Profile", "Employer");
+            return RedirectToAction("Profile", "Employer", new {id = user.Id});
         }
         ModelState.AddModelError("", "Ошибка при создании!");
         return View(model);
@@ -117,13 +116,17 @@ public class VacancyController : Controller
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Update(int id)
+    public async Task<IActionResult> Update(int? id)
     {
-        Vacancy? vacancy = await _db.Vacancies.FirstOrDefaultAsync(r => r.Id == id);
-        vacancy.EditedTime = DateTime.UtcNow;
-        _db.Vacancies.Update(vacancy);
-        await _db.SaveChangesAsync();
-        return Ok(vacancy.EditedTime.ToString());
+        if (id.HasValue)
+        {
+            Vacancy? vacancy = await _db.Vacancies.FirstOrDefaultAsync(r => r.Id == id);
+            vacancy.EditedTime = DateTime.UtcNow;
+            _db.Vacancies.Update(vacancy);
+            await _db.SaveChangesAsync();
+            return Ok(vacancy.EditedTime.ToString());
+        }
+        return NotFound();
     }
     
     [HttpPost]

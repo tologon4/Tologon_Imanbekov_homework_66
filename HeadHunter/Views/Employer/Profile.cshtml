@@ -24,22 +24,34 @@
       <tr>
         <td>Название организации</td>
         <td id="rusername">@Model.UserName</td>
-        <td><span class="edit-button text-primary" role="button" data-field="username" data-field2="Название организации">Изменить</span></td>
+        @if (Model.Id == ViewBag.CurrentUser.Id)
+        {
+          <td><span class="edit-button text-primary" role="button" data-field="username" data-field2="Название организации">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td >Email</td>
         <td id="remail">@Model.Email</td>
-        <td><span class="edit-button text-primary" role="button" data-field="email" data-field2="Email">Изменить</span></td>
+        @if (Model.Id == ViewBag.CurrentUser.Id)
+        {
+          <td><span class="edit-button text-primary" role="button" data-field="email" data-field2="Email">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td >Пароль</td>
         <td id="rpassword">***</td>
-        <td><span class="edit-button text-primary" role="button" data-field="password" data-field2="Пароль">Изменить</span></td>
+        @if (Model.Id == ViewBag.CurrentUser.Id)
+        {
+          <td><span class="edit-button text-primary" role="button" data-field="password" data-field2="Пароль">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td >Номер телефона</td>
         <td id="rphone">@Model.PhoneNumber</td>
-        <td><span class="edit-button text-primary" role="button" data-field="phone" data-filed2="Номер телефона">Изменить</span></td>
+        @if (Model.Id == ViewBag.CurrentUser.Id)
+        {
+          <td><span class="edit-button text-primary" role="button" data-field="phone" data-filed2="Номер телефона">Изменить</span></td>
+        }
       </tr>
       </tbody>
     </table>
@@ -52,7 +64,9 @@
   <div class="text-center">
     <h2 class="">Мои вакансии</h2>
   </div>
-  <div class="row row-cols-1 row-sm-cols-2 d-flex mt-4 g-4">
+  @if (Model.Id == ViewBag.CurrentUser.Id)
+  {
+    <div class="row row-cols-1 row-sm-cols-2 d-flex mt-4 g-4">
     @if (Model.Vacancies.Count > 0 && Model.Vacancies != null)
     {
       @foreach (var vacancy in Model.Vacancies)
@@ -83,8 +97,9 @@
         </div>
       }
     }
-    
   </div>
+  }
+  
 
 </div>
 

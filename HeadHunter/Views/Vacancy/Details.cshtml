@@ -12,35 +12,57 @@
       <tr>
         <td>Название</td>
         <td id="rname">@Model.Name</td>
-        <td><span class="vacancy-edit-button text-primary" role="button" data-field="name" data-field2="Название">Изменить</span></td>
+        @if (@ViewBag.CurrentUser.Id == @Model.UserId)
+        {
+          <td><span class="vacancy-edit-button text-primary" role="button" data-field="name" data-field2="Название">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td >Заработная плата</td>
         <td id="rsalary">@Model.Salary</td>
-        <td><span class="vacancy-edit-button text-primary" role="button" data-field="salary" data-field2="Заработная плата">Изменить</span></td>
+        @if (@ViewBag.CurrentUser.Id == @Model.UserId)
+        {
+          <td><span class="vacancy-edit-button text-primary" role="button" data-field="salary" data-field2="Заработная плата">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td>Обязанности</td>
         <td id="rdemands">@Model.Demands</td>
-        <td><span class="vacancy-edit-button text-primary" role="button" data-field="demands" data-field2="Обязанности">Изменить</span></td>
+        @if (@ViewBag.CurrentUser.Id == @Model.UserId)
+        {
+          <td><span class="vacancy-edit-button text-primary" role="button" data-field="demands" data-field2="Обязанности">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td >Опыт работы от</td>
         <td id="rexFrom">@Model.ExperienceFrom</td>
-        <td><span class="vacancy-edit-button text-primary" role="button" data-field="exFrom" data-filed2="Опыт работы от">Изменить</span></td>
+        @if (@ViewBag.CurrentUser.Id == @Model.UserId)
+        {
+          <td><span class="vacancy-edit-button text-primary" role="button" data-field="exFrom" data-filed2="Опыт работы от">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td >Опыт работы до</td>
         <td id="rexTo">@Model.ExperienceTo</td>
-        <td><span class="vacancy-edit-button text-primary" role="button" data-field="exTo" data-filed2="Опыт работы до">Изменить</span></td>
+        @if (@ViewBag.CurrentUser.Id == @Model.UserId)
+        {
+          <td><span class="vacancy-edit-button text-primary" role="button" data-field="exTo" data-filed2="Опыт работы до">Изменить</span></td>
+        }
       </tr>
       <tr>
         <td >Категория</td>
         <td id="rcategory">@Model.Category</td>
-        <td><span class="vacancy-edit-button text-primary" role="button" data-field="category" data-filed2="Категория">Изменить</span></td>
+        @if (@ViewBag.CurrentUser.Id == @Model.UserId)
+        {
+          <td><span class="vacancy-edit-button text-primary" role="button" data-field="category" data-filed2="Категория">Изменить</span></td>
+        }
       </tr>
       </tbody>
     </table>
+    @if (ViewBag.CurrentUser.Id != Model.UserId)
+    {
+      <button class="btn btn-primary ms-3 reply-btn" type="button" data-field="@Model.Id">Откликнуться</button>
+    }
   </div>
   <div class="col-4 mt-5" id="vacancy-change-div">
   </div>
@@ -52,5 +74,9 @@
         let editVacancy = '@Url.Action("Edit", "Vacancy")';
         let vacancyId = '@Model.Id';
         let categories = @Html.Raw(Json.Serialize(ViewBag.Categories));
+        let sendMessage = '@Url.Action("SendMessage", "Chat")';
+        let currentUserResumes = JSON.parse('@Html.Raw(ViewBag.CurrentUserResumes)');
+        let chatResults =  '@Url.Action("ChatResults", "Chat")';
+        let currentUserId = '@ViewBag.CurrentUserId';
   </script>
 }

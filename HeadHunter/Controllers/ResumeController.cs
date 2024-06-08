@@ -32,6 +32,7 @@ public class ResumeController : Controller
     [HttpGet]
     public async Task<IActionResult> Create()
     {
+        ViewBag.Categories = _db.Categories.Select(c => c.Name).ToList();
         return View();
     }
 
@@ -51,6 +52,14 @@ public class ResumeController : Controller
                 break;
             case "organ":
                 module.OrganizationName = value;
+                result = true;
+                break;
+            case "facebook":
+                resume.Facebook = value;
+                result = true;
+                break;
+            case "linkedIn":
+                resume.LinkedIn = value;
                 result = true;
                 break;
             case "response":
@@ -121,10 +130,15 @@ public class ResumeController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(Resume model, string? modulesObjs )
     {
+        ViewBag.Categories = _db.Categories.Select(c => c.Name).ToList();
         User user = await _userManager.GetUserAsync(User);
         if (ModelState.IsValid)
         {
-            var buffer = JsonConvert.DeserializeObject<List<ModuleViewModel>>(modulesObjs);
+            List<ModuleViewModel> buffer = new List<ModuleViewModel>();
+            if (modulesObjs != null)
+            {
+                buffer = JsonConvert.DeserializeObject<List<ModuleViewModel>>(modulesObjs);
+            }
             var modules = new List<Module>();
             Resume resume = model;
             resume.UserId = user.Id;
@@ -132,22 +146,25 @@ public class ResumeController : Controller
             resume.UserAvatar = user.Avatar;
             resume.Published = false;
             resume.CreatedTime = DateTime.UtcNow;
-            foreach (var buff in buffer)
+            if (buffer.Count > 0 )
             {
-                Module module = new Module()
+                foreach (var buff in buffer)
                 {
-                    StartedWorking = DateTime.Parse(buff.StartDate),
-                    EndedWorking = DateTime.Parse(buff.EndDate),
-                    OrganizationName = buff.Organization,
-                    Role = buff.Role,
-                    Responsibilities = buff.Response,
-                    Identity = buff.Identity
-                };
-                modules.Add(module);
+                    Module module = new Module()
+                    {
+                        StartedWorking = DateTime.Parse(buff.StartDate),
+                        EndedWorking = DateTime.Parse(buff.EndDate),
+                        OrganizationName = buff.Organization,
+                        Role = buff.Role,
+                        Responsibilities = buff.Response,
+                        Identity = buff.Identity
+                    };
+                    modules.Add(module);
+                }
+                resume.Modules = modules;
+                foreach (var module in modules)
+                    _db.Modules.Add(module);
             }
-            resume.Modules = modules;
-            foreach (var module in modules)
-                _db.Modules.Add(module);
             _db.Resumes.Add(resume);
             user.Resumes.Add(resume);
             _db.Users.Update(user);

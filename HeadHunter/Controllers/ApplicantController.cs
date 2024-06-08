@@ -21,9 +21,11 @@ public class ApplicantController : Controller
 
     [Authorize]
     [HttpGet]
-    public async Task<IActionResult> Profile()
+    public async Task<IActionResult> Profile(int id)
     {
-        User user = await _db.Users.Include(r => r.Resumes).FirstOrDefaultAsync(u => u.Id == int.Parse(_userManager.GetUserId(User)));
+        ViewBag.CurrentUser = await _userManager.GetUserAsync(User);
+        User user = await _db.Users.Include(v => v.Resumes)
+            .FirstOrDefaultAsync(u => u.Id == id);
         return View(user);
     }
 
