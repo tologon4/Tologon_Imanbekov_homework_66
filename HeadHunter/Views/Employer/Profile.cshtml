@@ -9,12 +9,18 @@
 <div class="row row-cols-2">
   <div class="col-md-4 pb-5 text-center mt-5">
     <img src="@Model.Avatar" width="200" height="200" class="rounded-circle mx-auto" id="ravatar">
-    <span for="avatar-file" class="edit-button" role="button" data-field="avatar" data-field2="Фото профиля"><i class="bi bi-pencil fs-3"></i></span>
+    @if (Model.Id == ViewBag.CurrentUser.Id)
+    {
+      <span for="avatar-file" class="edit-button" role="button" data-field="avatar" data-field2="Фото профиля"><i class="bi bi-pencil fs-3"></i></span>
+    }
   </div>
   <div class="col-md-6 pb-5">
     <div class="mt-5">
-      <a asp-action="Create" asp-controller="Vacancy" type="button" class="btn btn-outline-success rounded-3">Создать вакансию</a>
-      <a asp-action="Response" asp-controller="Chat" asp-route-userId="@Model.Id" type="button" class="btn btn-outline-success rounded-3">Отклики</a>
+      @if (Model.Id == ViewBag.CurrentUser.Id)
+      {
+        <a asp-action="Create" asp-controller="Vacancy" type="button" class="btn btn-outline-success rounded-3">Создать вакансию</a>
+        <a asp-action="Response" asp-controller="Chat" asp-route-userId="@Model.Id" type="button" class="btn btn-outline-success rounded-3">Отклики</a>
+      }
     </div>
   </div>
 </div>

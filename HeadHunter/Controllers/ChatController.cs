@@ -32,7 +32,7 @@ public class ChatController : Controller
             var messages = _db.Messages.Include(u => u.User)
                 .Include(r => r.Resume)
                 .Where(m => m.ChatId == chat.Id).ToList();
-            return PartialView("_ChatPartialView", messages);
+            return PartialView("_ChatPartialView", messages.OrderBy(m => m.SentTime).ToList());
         }
         return NotFound();
     }
@@ -72,7 +72,7 @@ public class ChatController : Controller
 
             Message message = new Message()
             {
-                UserId = currentUser?.Id == vacancy.UserId ? vacancy.UserId : resume?.UserId,
+                UserId = currentUser?.Id == vacancy.UserId ? vacancy.UserId : resume == null ? currentUser.Id : resume.UserId,
                 MessageContent = messageContent,
                 ResumeId = resume?.Id,
                 ChatId = chat.Id,
